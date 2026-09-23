@@ -1,0 +1,22 @@
+name: playground-ci
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+  workflow_dispatch:
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Optional slow pending status
+        if: hashFiles('knowledge/.slow-ci') != ''
+        run: |
+          echo "Simulating long-running CI for Graphite pending state…"
+          sleep 180
+      - name: Fail when marked
+        run: |
+          if [ -f knowledge/.fail-ci ]; then
+            echo "::error::Playground deliberate CI failure (knowledge/.fail-ci present)"
+            exit 1
+          fi
+          echo "Playground CI passed"

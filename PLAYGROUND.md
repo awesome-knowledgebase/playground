@@ -1,42 +1,48 @@
-# Scenario map
+# Scenario map — Review / CI / Merge
 
 Repo: https://github.com/awesome-knowledgebase/playground
 
-## Ready now (authored by `taehalim`)
+Inspect the same PR in **GitHub → Graphite → Cursor**. Graphite shows three header signals: **Review status**, **CI status**, **Merge status**.
 
-| # | Title | Try this |
+## Review status
+
+| Case | How to see it | PR |
 |---|---|---|
-| 1 | `[own] Clarify onboarding…` | As `taehalim`: Approve / Request changes should be unavailable |
-| 2 | `[draft] WIP glossary…` | Draft affordances |
-| 3 | `[stack-a] …sources` | Bottom of Graphite stack |
-| 4 | `[stack-b] …concept` | Stack navigation (base = stack-a branch) |
-| 5 | `[conflict] Extend review protocol` | Conflict UX |
-| 6 | `[discussion] Add reviewer checklist` | Line + summary comments, then Finish review |
+| Needs your review | You are requested reviewer, no decision yet | peer Approve/Fix/Comment |
+| Returned to you | Your PR has Request changes | #1, #6 |
+| Waiting for reviewers | Your open PR, reviews outstanding | stack / own without verdict |
+| Waiting for author | You requested changes on someone else’s PR | after you Request changes on a peer Fix-me |
+| Approved (section) | Your PR has required approval, not merged | `[ready] Approved — merge when ready` |
+| Comment-only review | Peer left Comment (no approve/block) | see reviews on discussion |
+| Draft | Not ready for review | #2 |
+| Own-PR decision lock | Author cannot Approve / Request changes | #1 as taehalim |
 
-## Needs peer login (one-time)
+## CI status
 
-Branches are seeded. Open them **as the peer account** so `taehalim` can Approve / Request changes / Comment on someone else’s PR:
-
-```sh
-gh auth login -h github.com -p https -w   # choose stray-fizz, then later taeha-bot
-cd $(gh repo clone awesome-knowledgebase/playground -- --path /tmp/akb && echo /tmp/akb)
-./scripts/open-peer-prs.sh
-```
-
-| Branch | Expected author | Decision to practice as `taehalim` |
+| Case | Marker | PR title prefix |
 |---|---|---|
-| `scenario/peer-stray-fizz-approve-me` | stray-fizz | Approve |
-| `scenario/peer-stray-fizz-fix-me` | stray-fizz | Request changes |
-| `scenario/peer-stray-fizz-comment-me` | stray-fizz | Comment |
-| `scenario/peer-taeha-bot-approve-me` | taeha-bot | Approve |
-| `scenario/peer-taeha-bot-fix-me` | taeha-bot | Request changes |
+| Passing | no marker files | `[ci-pass]` |
+| Failing | `knowledge/.fail-ci` | `[ci-fail]` |
+| Pending / in progress | `knowledge/.slow-ci` (≈3 min) | `[ci-pending]` |
+| No checks | older PRs before workflow | #1–#6 historically empty until new push |
 
-## Cross-product checklist
+## Merge status
 
-For one `[peer]` Approve PR, in each of GitHub / Graphite / Cursor:
+| Case | Cause | PR |
+|---|---|---|
+| Blocked — review | Branch protection requires 1 approval | most open PRs |
+| Blocked — failing CI | Required check fails (after protection update) | `[ci-fail]` |
+| Conflict / dirty | Diverged from main | #5 |
+| Ready / clean | Approved + CI green + no conflict | `[ready]` when checks finish |
+| Merged / recently merged | Landed on main | `[merged]` sample |
+| Closed | Closed without merge | `[closed]` sample |
+| Stack base vs upstack | #3 base main, #4 base stack-a | #3 / #4 |
 
-1. Open the PR
-2. Choose **Approve**, submit
-3. Refresh GitHub Conversation — expect an Approving review
-4. Repeat on Fix-me with **Request changes**, on Comment-me with **Comment**
-5. On `[own]` confirm Approve is blocked
+## Suggested Graphite walk (status trio)
+
+1. Open `[ready]` — Review=Approved, CI=pass, Merge=ready  
+2. Open `[ci-fail]` — CI=fail, Merge blocked  
+3. Open `[ci-pending]` while job runs — CI=pending  
+4. Open #5 — Merge=conflict  
+5. Open #1 — Review=Changes requested (Returned to you)  
+6. Open a peer Fix-me after you Request changes — Waiting for author  
