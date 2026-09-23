@@ -1,33 +1,42 @@
 # Scenario map
 
-Use these PRs to answer review-decision questions by looking, not guessing.
+Repo: https://github.com/awesome-knowledgebase/playground
 
-| PR title prefix | Author intent | What to try |
+## Ready now (authored by `taehalim`)
+
+| # | Title | Try this |
 |---|---|---|
-| `[own]` | Opened by the account you are logged in as | Approve / Request changes should be blocked or Comment-only (GitHub + Graphite + Cursor) |
-| `[peer]` | Opened by another org member | Approve / Request changes should publish a real GitHub review verdict |
-| `[draft]` | Draft PR | Finish review / merge affordances differ |
-| `[stack-a]` / `[stack-b]` | Ordered related changes | Graphite stack navigation vs GitHub single PR vs Cursor |
-| `[conflict]` | Conflicts with `main` | Conflict UX across surfaces |
-| `[approved]` | Already has an approving review | Merge readiness / required-review state |
-| `[changes-requested]` | Has a Request changes review | Blocking review UX |
-| `[comment-only]` | Has Comment review only | No merge-blocking verdict |
-| `[discussion]` | Line + summary comments | Comment threading / pending review batching |
+| 1 | `[own] Clarify onboarding…` | As `taehalim`: Approve / Request changes should be unavailable |
+| 2 | `[draft] WIP glossary…` | Draft affordances |
+| 3 | `[stack-a] …sources` | Bottom of Graphite stack |
+| 4 | `[stack-b] …concept` | Stack navigation (base = stack-a branch) |
+| 5 | `[conflict] Extend review protocol` | Conflict UX |
+| 6 | `[discussion] Add reviewer checklist` | Line + summary comments, then Finish review |
 
-## Suggested comparison checklist
+## Needs peer login (one-time)
 
-For one `[peer]` PR, in each product:
+Branches are seeded. Open them **as the peer account** so `taehalim` can Approve / Request changes / Comment on someone else’s PR:
 
-- [ ] Change decision to **Approve**, submit, refresh GitHub Conversation
-- [ ] On another `[peer]` PR, submit **Request changes**
-- [ ] On a third, submit **Comment** only
-- [ ] On your `[own]` PR, confirm Approve / Request changes is unavailable
-- [ ] Confirm inbox / section movement (Needs review → Approved / Waiting for author)
+```sh
+gh auth login -h github.com -p https -w   # choose stray-fizz, then later taeha-bot
+cd $(gh repo clone awesome-knowledgebase/playground -- --path /tmp/akb && echo /tmp/akb)
+./scripts/open-peer-prs.sh
+```
 
-## Accounts
+| Branch | Expected author | Decision to practice as `taehalim` |
+|---|---|---|
+| `scenario/peer-stray-fizz-approve-me` | stray-fizz | Approve |
+| `scenario/peer-stray-fizz-fix-me` | stray-fizz | Request changes |
+| `scenario/peer-stray-fizz-comment-me` | stray-fizz | Comment |
+| `scenario/peer-taeha-bot-approve-me` | taeha-bot | Approve |
+| `scenario/peer-taeha-bot-fix-me` | taeha-bot | Request changes |
 
-| Login | Role in this playground |
-|---|---|
-| `taehalim` | Primary inspector |
-| `stray-fizz` | Peer author / alternate reviewer |
-| `taeha-bot` | Peer author / bot-like second identity |
+## Cross-product checklist
+
+For one `[peer]` Approve PR, in each of GitHub / Graphite / Cursor:
+
+1. Open the PR
+2. Choose **Approve**, submit
+3. Refresh GitHub Conversation — expect an Approving review
+4. Repeat on Fix-me with **Request changes**, on Comment-me with **Comment**
+5. On `[own]` confirm Approve is blocked
