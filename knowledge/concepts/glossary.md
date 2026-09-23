@@ -10,7 +10,7 @@ owners: [taehalim]
 A reviewed proposal to mutate canonical knowledge (usually a pull request).
 
 ## Review decision
-One of: `comment`, `approve`, `request_changes`.
+One of: `comment`, `approve`, `request_changes`. Also called a **verdict**.
 
 ## Peer review
 A review submitted by someone who is **not** the pull request author.
